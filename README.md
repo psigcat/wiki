@@ -1,4 +1,4 @@
-PSIG wiki documenta proyectos y software de [PSIG] (http://www.psig.es/).
+PSIG wiki documenta proyectos y software de [PSIG](http://www.psig.es/).
 
 # Índice
 

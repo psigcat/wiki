@@ -1,0 +1,1 @@
+Basado en manual de instalación oficial de [MapProxy](https://mapproxy.org/docs/1.11.0/install.html)
