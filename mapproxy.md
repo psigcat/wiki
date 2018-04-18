@@ -1,21 +1,21 @@
-# Instalar y configurar MapProxy
+# Instalación y configuración MapProxy con Gunicorn
 
 Basado en manual de instalación oficial de [MapProxy](https://mapproxy.org/docs/1.11.0/install.html)
 
-- [Instalar MapProxy](#instalar-mapproxy)
-- [Configurar MapProxy](#configurar-mapproxy)
-- [Probar MapProxy](#probar-mapproxy)
-- [Gunicorn HTTP Server](#gunicorn-http-server)
-- [Ejemplo uso OpenLayers](#ejemplo-uso-openlayers)
+1. [Instalar MapProxy](#instalar-mapproxy)
+2. [Configurar MapProxy](#configurar-mapproxy)
+3. [Probar MapProxy](#probar-mapproxy)
+4. [Gunicorn HTTP Server](#gunicorn-http-server)
+5. [Ejemplo uso OpenLayers](#ejemplo-uso-openlayers)
 
 ## Instalar MapProxy
 
-~~~ {}
+```
 sudo apt-get install python-setuptools
 sudo easy_install MapProxy
 mapproxy-util --version
 mapproxy-util create -t base-config /home/psig/mapproxy
-~~~
+```
 
 Nota: Si hay más programas de python funcionando en el servidor, entonces es recomendado instalarlo dentro de un [entorno virtual](https://mapproxy.org/docs/1.11.0/install.html#create-a-new-virtual-environment).
 
@@ -23,7 +23,7 @@ Nota: Si hay más programas de python funcionando en el servidor, entonces es re
 
 Toda la configuración de MapProxy esta en el archivo `/home/psig/mapproxy/mapproxy.yaml`:
 
-~~~ {}
+```yaml
 services:
   demo:
   wms:
@@ -59,7 +59,7 @@ grids:
         base: GLOBAL_WEBMERCATOR
 
 globals:
-~~~
+```
 
 Nota: Para añadir más capas, hay que añadir los parámetros `layers`, `caches`, `sources` basado en la documentación de [MapProxy](https://mapproxy.org/docs/1.11.0/configuration.html).
 
@@ -83,10 +83,10 @@ MapProxy contiene un servidor HTTP sencillo, para entornos de producción esta r
 
 Creamos el archivo `/home/psig/mapproxy/config.py`:
 
-~~~ {}
+```
 from mapproxy.wsgiapp import make_wsgi_app
 application = make_wsgi_app(r'/home/psig/mapproxy/mapproxy.yaml')
-~~~
+```
 
 ### Probar Gunicorn
 
@@ -98,7 +98,7 @@ Podemos probar el correcto funcionamiento de Gunicorn con:
 
 Creamos el archivo `/etc/init/mapproxy.conf`:
 
-~~~ {}
+```
 start on runlevel [2345]
 stop on runlevel [!2345]
 
@@ -113,7 +113,7 @@ exec gunicorn -k eventlet -w 8 -b :8080 \
 	--no-sendfile \
 	application \
 	>>/var/log/mapproxy/gunicorn.log 2>&1
-~~~
+```
 
 Se puede comprobar el correcto funcionamiento en http://localhost:8080 
 
@@ -121,19 +121,19 @@ Se puede comprobar el correcto funcionamiento en http://localhost:8080
 
 Añadimos la siguiente configuración a `/etc/nginx/available-sites/default` o similar:
 
-~~~ {}
+```
 location /mapproxy {
 	proxy_pass http://localhost:8080;
 	proxy_set_header Host $http_host;
 	proxy_set_header X-Script-Name /mapproxy;
 }
-~~~
+```
 
 Ahora la interfaz de prueba esta accesible en http://localhost/mapproxy 
 
 ## Ejemplo uso OpenLayers
 
-~~~ {.html}
+```html
 <!DOCTYPE html>
 <html>
   <head>
@@ -165,4 +165,4 @@ Ahora la interfaz de prueba esta accesible en http://localhost/mapproxy
     </script>
   </body>
 </html>
-~~~
+```

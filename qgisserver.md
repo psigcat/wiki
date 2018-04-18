@@ -3,11 +3,11 @@
 1. [Instalar QGIS](#instalar-qgis)
 2. [Configurar Nginx](#configurar-nginx)
 3. [Configurar fastcgi](#configurar-fastcgi)
-4. [Configurar postgresql][#configurar-postgresql]
+4. [Configurar postgresql](#configurar-postgresql)
 5. [Configurar proyecto QGIS](#configurar-proyecto-qgis)
 6. [Ejemplo uso OpenLayers](#ejemplo-uso-openlayers)
 
-## 1. Instalar QGIS
+## Instalar QGIS
 
 Para instalar un versión actual de QGIS en un servidor Debian/Ubuntu primero hay que añadir el repositorio y la llave tal como esta indicado [aquí](https://qgis.org/en/site/forusers/alldownloads.html#debian-ubuntu)
 
@@ -15,9 +15,12 @@ Después instalamos QGIS Server con:
 
 `sudo apt-get install qgis-server`
 
-## 2. Configurar Nginx
+## Configurar Nginx
 
-1. Activar configuración por defecto haciendo enlace simbólico: `sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default`
+1. Activar configuración por defecto haciendo enlace simbólico: 
+
+`sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default`
+
 2. Configurar puerto 6080 como default para Nginx cambiando el fichero `/etc/nginx/sites-available/default`:
 ```
 server {
@@ -26,9 +29,10 @@ server {
 ```
 
 3. Reiniciar Nginx: `sudo service nginx restart`
+
 4. Comprobar acceso: http://localhost:6080/
 
-## 3. Configurar fastcgi
+## Configurar fastcgi
 
 1. Instalar fastcgi: `sudo apt-get install fcgiwrap`
 2. Añadir configuración insertando al fichero `/etc/nginx/sites-available/default`:
@@ -52,9 +56,11 @@ server {
 4. Encender fastcgi: `service fcgiwrap start`
 5. Reencender nginx: `sudo service nginx restart`
 
-Comprobamos que GetCapabilities del QGIS Server funciona correctamente: http://localhost:6080/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities
+Comprobamos que GetCapabilities del QGIS Server funciona correctamente: 
 
-## 4. Configurar postgresql
+http://localhost:6080/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities
+
+## Configurar postgresql
 
 1. Primero hay que instalar postgresql:
 - Instalar postgresql con: `sudo apt-get install postgresql postgresql-contrib`
@@ -85,7 +91,7 @@ password=XXX
 - Instalar: `sudo apt-get install postgresql-9.3-pgrouting`
 
 
-## 5. Configurar proyecto QGIS
+## Configurar proyecto QGIS
 
 Este paso hay que repetir para cada nuevo proyecto de QGIS que se suba al servidor. Para la descripción genérica se usa el nombre proyectoqgis tanto como nombre del fichero del proyecto como para las carpetas:
 
@@ -112,7 +118,7 @@ GetCapabilities: http://mapes.castelldefels.org/cgi-bin/testqgis/qgis_mapserv.fc
 Mapa: http://mapes.castelldefels.org/cgi-bin/testqgis/qgis_mapserv.fcgi?SERVICE=WMS&VERSION=1.3.0&SRS=EPSG:4326&REQUEST=GetMap&map=/home/psig/testqgis/countries.qgs&BBOX=-173.0000000000000000,-111.0000000000000000,187.0000000000000000,135.0000000000000000&WIDTH=550&HEIGHT=500&LAYERS=countries&STYLES=,,&FORMAT=image/png 
 
 
-## 6. Ejemplo uso OpenLayers
+## Ejemplo uso OpenLayers
 
 ```html
 <!DOCTYPE html>
