@@ -17,11 +17,11 @@ mapproxy-util --version
 mapproxy-util create -t base-config /home/psig/mapproxy
 ~~~
 
-Nota: Si hay más programas de python funcionando en el servidor, entonces es recomendado instalarlo dentro de un entorno virtual: https://mapproxy.org/docs/1.11.0/install.html#create-a-new-virtual-environment
+Nota: Si hay más programas de python funcionando en el servidor, entonces es recomendado instalarlo dentro de un [entorno virtual](https://mapproxy.org/docs/1.11.0/install.html#create-a-new-virtual-environment).
 
 ## Configurar MapProxy
 
-Toda la configuración de MapProxy esta en el archivo `/home/psig/mapproxy/mapproxy.yaml`.
+Toda la configuración de MapProxy esta en el archivo `/home/psig/mapproxy/mapproxy.yaml`:
 
 ~~~ {}
 services:
@@ -61,7 +61,7 @@ grids:
 globals:
 ~~~
 
-Nota: Para añadir más capas, hay que añadir los parámetros `layers`, `caches`, `sources` basado en la documentación de MapProxy: https://mapproxy.org/docs/1.11.0/configuration.html 
+Nota: Para añadir más capas, hay que añadir los parámetros `layers`, `caches`, `sources` basado en la documentación de [MapProxy](https://mapproxy.org/docs/1.11.0/configuration.html).
 
 ## Probar MapProxy
 
@@ -110,9 +110,9 @@ setgid mapproxy
 chdir /home/psig/mapproxy
 
 exec gunicorn -k eventlet -w 8 -b :8080 \
-    --no-sendfile \
-    application \
-    >>/var/log/mapproxy/gunicorn.log 2>&1
+	--no-sendfile \
+	application \
+	>>/var/log/mapproxy/gunicorn.log 2>&1
 ~~~
 
 Se puede comprobar el correcto funcionamiento en http://localhost:8080 
@@ -124,9 +124,9 @@ Añadimos la siguiente configuración a `/etc/nginx/available-sites/default` o s
 ~~~ {}
 location /mapproxy {
 	proxy_pass http://localhost:8080;
-    proxy_set_header Host $http_host;
-    proxy_set_header X-Script-Name /mapproxy;
-}`
+	proxy_set_header Host $http_host;
+	proxy_set_header X-Script-Name /mapproxy;
+}
 ~~~
 
 Ahora la interfaz de prueba esta accesible en http://localhost/mapproxy 
@@ -137,31 +137,31 @@ Ahora la interfaz de prueba esta accesible en http://localhost/mapproxy
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Castefa WMS QGIS</title>
+    <title>Test WMS MapProxy</title>
     <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
-    <head>
+  <head>
   <body>
     <div id="map" class="map"></div>
     <script>
-      var wmsLayer = new ol.layer.Tile({
-        source: new ol.source.TileWMS({
-		url: 'http://mapes.castelldefels.org/mapproxy/service',
-          params: {
-            'LAYERS': 'Base_Web',
-          },
-          serverType: 'qgis'                                         
-        })
-      });
+		var wmsLayer = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				url: 'http://mapes.castelldefels.org/mapproxy/service',
+				params: {
+					'LAYERS': 'Base_Web',
+				},
+				serverType: 'qgis'
+			})
+		});
              
-      var map = new ol.Map({
-        target: 'map',
-        layers: [wmsLayer],
-        view: new ol.View({
-          center: [219484, 5053529],
-          zoom: 14
-        })
-      });
+		var map = new ol.Map({
+			target: 'map',
+			layers: [wmsLayer],
+			view: new ol.View({
+				center: [219484, 5053529],
+				zoom: 14
+			})
+		});
     </script>
   </body>
 </html>
