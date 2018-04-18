@@ -2,17 +2,20 @@
 
 Basado en manual de instalación oficial de [MapProxy](https://mapproxy.org/docs/1.11.0/install.html)
 
-- [Instalar MapProxy](instalar-mapproxy)
-- [Configurar MapProxy](configurar-mapproxy)
-- [Probar MapProxy](probar-mapproxy)
-- [Gunicorn HTTP Server](gunicorn-http-server)
+- [Instalar MapProxy](#instalar-mapproxy)
+- [Configurar MapProxy](#configurar-mapproxy)
+- [Probar MapProxy](#probar-mapproxy)
+- [Gunicorn HTTP Server](#gunicorn-http-server)
+- [Ejemplo uso OpenLayers](#ejemplo-uso-openlayers)
 
 ## Instalar MapProxy
 
-`sudo apt-get install python-setuptools
+~~~ {}
+sudo apt-get install python-setuptools
 sudo easy_install MapProxy
 mapproxy-util --version
-mapproxy-util create -t base-config /home/psig/mapproxy`
+mapproxy-util create -t base-config /home/psig/mapproxy
+~~~
 
 Nota: Si hay más programas de python funcionando en el servidor, entonces es recomendado instalarlo dentro de un entorno virtual: https://mapproxy.org/docs/1.11.0/install.html#create-a-new-virtual-environment
 
@@ -20,7 +23,8 @@ Nota: Si hay más programas de python funcionando en el servidor, entonces es re
 
 Toda la configuración de MapProxy esta en el archivo `/home/psig/mapproxy/mapproxy.yaml`.
 
-`services:
+~~~ {}
+services:
   demo:
   wms:
     md:
@@ -54,13 +58,16 @@ grids:
     webmercator:
         base: GLOBAL_WEBMERCATOR
 
-globals:`
+globals:
+~~~
 
 Nota: Para añadir más capas, hay que añadir los parámetros `layers`, `caches`, `sources` basado en la documentación de MapProxy: https://mapproxy.org/docs/1.11.0/configuration.html 
 
 ## Probar MapProxy
 
-Para probar, lo arrancamos con: `mapproxy-util serve-develop mapproxy.yaml`
+Para probar, lo arrancamos con: 
+
+`mapproxy-util serve-develop mapproxy.yaml`
 
 Después se puede acceder a través de una interfaz web de prueba en http://localhost:6969/mapproxy
 
@@ -68,27 +75,31 @@ Después se puede acceder a través de una interfaz web de prueba en http://loca
 
 MapProxy contiene un servidor HTTP sencillo, para entornos de producción esta recomendado utilizar un servidor HTTP más estable. Utilizaremos Gunicorn, un servidor HTTP escrito en python.
 
-1. Instalar:
+### Instalar
+
 `sudo apt-get install python-eventlet gunicorn`
 
-2. Crear webservice:
+### Crear webservice
 
 Creamos el archivo `/home/psig/mapproxy/config.py`:
 
-`from mapproxy.wsgiapp import make_wsgi_app
-application = make_wsgi_app(r'/home/psig/mapproxy/mapproxy.yaml')`
+~~~ {}
+from mapproxy.wsgiapp import make_wsgi_app
+application = make_wsgi_app(r'/home/psig/mapproxy/mapproxy.yaml')
+~~~
 
-3. Probar Gunicorn:
+### Probar Gunicorn
 
 Podemos probar el correcto funcionamiento de Gunicorn con: 
 
 `gunicorn -k eventlet -w 4 -b :8080 config:application –no-sendf`
 
-4. Crear servicio de arranque:
+### Crear servicio de arranque
 
 Creamos el archivo `/etc/init/mapproxy.conf`:
 
-`start on runlevel [2345]
+~~~ {}
+start on runlevel [2345]
 stop on runlevel [!2345]
 
 respawn
@@ -101,16 +112,57 @@ chdir /home/psig/mapproxy
 exec gunicorn -k eventlet -w 8 -b :8080 \
     --no-sendfile \
     application \
-    >>/var/log/mapproxy/gunicorn.log 2>&1`
+    >>/var/log/mapproxy/gunicorn.log 2>&1
+~~~
 
 Se puede comprobar el correcto funcionamiento en http://localhost:8080 
 
-5. Crear proxy nginx:
+### Crear proxy nginx
 
-`location /mapproxy {
+Añadimos la siguiente configuración a `/etc/nginx/available-sites/default` o similar:
+
+~~~ {}
+location /mapproxy {
 	proxy_pass http://localhost:8080;
     proxy_set_header Host $http_host;
     proxy_set_header X-Script-Name /mapproxy;
 }`
+~~~
 
 Ahora la interfaz de prueba esta accesible en http://localhost/mapproxy 
+
+## Ejemplo uso OpenLayers
+
+~~~ {.html}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Castefa WMS QGIS</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+    <head>
+  <body>
+    <div id="map" class="map"></div>
+    <script>
+      var wmsLayer = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+		url: 'http://mapes.castelldefels.org/mapproxy/service',
+          params: {
+            'LAYERS': 'Base_Web',
+          },
+          serverType: 'qgis'                                         
+        })
+      });
+             
+      var map = new ol.Map({
+        target: 'map',
+        layers: [wmsLayer],
+        view: new ol.View({
+          center: [219484, 5053529],
+          zoom: 14
+        })
+      });
+    </script>
+  </body>
+</html>
+~~~
