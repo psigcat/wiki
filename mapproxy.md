@@ -27,16 +27,19 @@ Toda la configuración de MapProxy esta en el archivo `/home/psig/mapproxy/mappr
 services:
   demo:
   wms:
+    srs: ['EPSG:4326', 'EPSG:3857', 'EPSG:25831']
+    bbox_srs: ['EPSG:4326', 'EPSG:3857', 'EPSG:25831']
     md:
-        title: Castefa MapProxy WMS Proxy
-        abstract: MapProxy WMS Proxy for Castefa
-        online_resource: http://www.castelldefels.org
-        contact:
-            organization: PSIG
-            email: info@psig.es
-        access_constraints:
-            This service is for internal use only.
-        fees: 'None'
+      title: Castefa MapProxy WMS Proxy
+      abstract: MapProxy WMS Proxy for Castefa
+      online_resource: http://www.castelldefels.org
+      contact:
+          organization: PSIG
+          email: info@psig.es
+      access_constraints:
+          This service is for internal use only.
+      fees: 'None'
+
 layers:
   - name: Base_Web
     title: SSA WMS - Base Web
@@ -85,7 +88,7 @@ Creamos el archivo `/home/psig/mapproxy/config.py`:
 
 ```
 from mapproxy.wsgiapp import make_wsgi_app
-application = make_wsgi_app(r'/home/psig/mapproxy/mapproxy.yaml')
+application = make_wsgi_app(r'/home/psig/mapproxy/mapproxy.yaml', reloader=True)
 ```
 
 ### Probar Gunicorn
@@ -111,7 +114,7 @@ chdir /home/psig/mapproxy
 
 exec gunicorn -k eventlet -w 8 -b :8080 \
 	--no-sendfile \
-	application \
+	config:application \
 	>>/var/log/mapproxy/gunicorn.log 2>&1
 ```
 
