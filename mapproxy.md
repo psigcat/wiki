@@ -4,9 +4,10 @@ Basado en manual de instalación oficial de [MapProxy](https://mapproxy.org/docs
 
 1. [Instalar MapProxy](#instalar-mapproxy)
 2. [Configurar MapProxy](#configurar-mapproxy)
-3. [Probar MapProxy](#probar-mapproxy)
-4. [Gunicorn HTTP Server](#gunicorn-http-server)
-5. [Ejemplo uso OpenLayers](#ejemplo-uso-openlayers)
+3. [Comprobar MapProxy](#comprobar-mapproxy)
+4. [Actualizar MapProxy](#actualizar-mapproxy)
+5. [Gunicorn HTTP Server](#gunicorn-http-server)
+6. [Ejemplo uso OpenLayers](#ejemplo-uso-openlayers)
 
 ## Instalar MapProxy
 
@@ -66,13 +67,19 @@ globals:
 
 Nota: Para añadir más capas, hay que añadir los parámetros `layers`, `caches`, `sources` basado en la documentación de [MapProxy](https://mapproxy.org/docs/1.11.0/configuration.html).
 
-## Probar MapProxy
+## Comprobar MapProxy
 
 Para probar, lo arrancamos con: 
 
 `mapproxy-util serve-develop mapproxy.yaml`
 
 Después se puede acceder a través de una interfaz web de prueba en http://localhost:6969/mapproxy
+
+## Actualizar MapProxy
+
+En caso de actualizar capas del proyecto QGIS hace falta adaptar la configuración de MapProxy. Para eso editamos el archivo `/home/psig/mapproxy/mapproxy.yaml`.
+
+Después hay que borrar los tiles guardados por MapProxy en `/home/psig/mapproxy/cache_data`. Los tiles de cada capa se guardan en una carpeta que contiene el nombre de la capa (o del grupo) y la proyección (por ejemplo `EPSG3857`). Borra la capa con `rm -rf nombre_carpeta` o por FTP.
 
 ## Gunicorn HTTP Server
 
