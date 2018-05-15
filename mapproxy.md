@@ -42,25 +42,44 @@ services:
       fees: 'None'
 
 layers:
+  - name: Base_Mapa_Web
+    title: base mapa web
+    sources: [sentits_circulacio,base_web]
   - name: Base_Web
     title: SSA WMS - Base Web
     sources: [base_web]
+  - name: Sentits_circulacio
+    title: Sentits circulacio
+    sources: [sentits_circulacio]
 
 caches:
   base_web:
     grids: [webmercator]
     sources: [base_web]
+  sentits_circulacio:
+    grids: [webmercator]
+    sources: [sentits_circulacio]
+    meta_size: [4,4]
+    meta_buffer: 100
 
 sources:
-  ssa_layer_tm:
+  base_web:
     type: wms
     req:
       url: http://localhost:6969/cgi-bin/Base_Mapa_Web/qgis_mapserv.fcgi
       layers: Base_Web
+      transparent: true
+  sentits_circulacio:
+    type: wms
+    req:
+      url: http://localhost:6969/cgi-bin/Base_Mapa_Web/qgis_mapserv.fcgi
+      layers: Sentits circulació
+      transparent: true
 
 grids:
     webmercator:
         base: GLOBAL_WEBMERCATOR
+        res: [50,25,10,5,2,1,0.5,0.25,0.125]
 
 globals:
 ```
