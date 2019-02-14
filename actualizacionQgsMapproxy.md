@@ -14,7 +14,9 @@ Nuestros mapas están en la carpeta `/var/servers/[PROYECTO]/maps`, se trata de 
 
 Usamos el script [qgs_parser](https://github.com/geraldo/qgs_parser) para parsear el archivo `.qgs` y generar un archivo de configuración `.json`. Este archivo contiene la configuración de capas para el visor web, tanto visibilidad, identificación como los campos de features a mostrar.
 
-El script se arranca con: `/var/servers/[PROYECTO]/maps/parse.sh [PROYECTO].qgs`
+El script se arranca con: 
+`cd /var/servers/[PROYECTO]/maps/`
+`./parse.sh [PROYECTO].qgs`
 
 El json resultando se guarda en la carpeta `/var/servers/[PROYECTO]/web/js/data/[PROYECTO].qgs.json`
 
@@ -30,4 +32,6 @@ El seeding completo arrancamos con:
 
 Si solamente queremos regenerar los tiles de una capa específica o un grupo de capas, lo arrancamos con:
 
-`sudo mapproxy-seed -f mapproxy.yaml -s seed_[PROEYCTO].yaml -c 8 --seed [PROYECTO]_[CAPA/GRUPO] > seed_[PROYECTO]_[CAPA_GRUPO].log`
+`sudo mapproxy-seed -f mapproxy.yaml -s seed_[PROEYCTO].yaml -c 8 --seed [PROYECTO]_[CAPA/GRUPO] > seed_[PROYECTO]_[CAPA/GRUPO].log`
+
+Donde `[CAPA/GRUPO]` es el nombre de la capa definido en `/opt/mapproxy/[PROYECTO]/mapproxy.yaml`.
