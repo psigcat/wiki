@@ -2,9 +2,9 @@
 
 La actualización de los mapas en nuestros servidores GIS pasa por 3 partes:
 
-1. Publicar proyecto actualizado
-2. Parsear proyecto Qgis
-3. Regenerar tiles MapProxy
+1. [Publicar proyecto actualizado](#1-publicar-mapa-actualizado)
+2. [Parsear proyecto Qgis](#2-parsear-proyecto-qgis)
+3. [Regenerar tiles MapProxy](#3-regenerar-tiles-mapproxy)
 
 ## 1. Publicar mapa actualizado
 
