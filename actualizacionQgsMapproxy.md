@@ -6,19 +6,19 @@ La actualización de los mapas en nuestros servidores GIS pasa por 3 partes:
 2. Parsear proyecto Qgis
 3. Regenerar tiles MapProxy
 
-## Publicar mapa actualizado
+## 1. Publicar mapa actualizado
 
 Nuestros mapas están en la carpeta `/var/servers/[PROYECTO]/maps`, se trata de subir el proyecto .qgs actualizado a esta carpeta y sobreescribir el archivo existente.
 
-## Parsear proyecto Qgis
+## 2. Parsear proyecto Qgis
 
-Usamos el script [qgs_parser](https://github.com/geraldo/qgs_parser) para parsear el archivo `.qgs` y generar un archivo de configuración `.json`. Este archivo contiene la configuración de capas que carga el visor web, tanto visibilidad, identificación como los campos a mostrar.
+Usamos el script [qgs_parser](https://github.com/geraldo/qgs_parser) para parsear el archivo `.qgs` y generar un archivo de configuración `.json`. Este archivo contiene la configuración de capas para el visor web, tanto visibilidad, identificación como los campos de features a mostrar.
 
 El script se arranca con: `/var/servers/[PROYECTO]/maps/parse.sh [PROYECTO].qgs`
 
 El json resultando se guarda en la carpeta `/var/servers/[PROYECTO]/web/js/data/[PROYECTO].qgs.json`
 
-## Regenerar tiles MapProxy
+## 3. Regenerar tiles MapProxy
 
 Como último regeneramos los tiles de [MapProxy](https://mapproxy.org/).
 
