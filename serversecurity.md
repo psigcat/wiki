@@ -54,8 +54,9 @@ Configuramos el acceso al servidor indicando host (localhost), port (9999), data
 
 ![](images/pgadmin4ssh.png)
 
-[//]: # Para que pgadmin4 accede por ssh hace falta un sistema bastante nuevo, parece que hace falta la versión python3-paramiko_2.4.1 o más nueva. En este caso funciona añadir usuario y la llave privada al campo *Identity file* en la pestaña SSH tunnel:
-[//]: # ![](images/pgadmin4.png)
+**Alternativa**: En sistemas nuevos (depende del paquete python3-paramiko_2.4.1 o más nueva) es posible usar la configuración del tunel ssh de pgadmin. En este caso funciona añadir usuario y la llave privada al campo *Identity file* en la pestaña SSH tunnel:
+
+![](images/pgadmin4.png)
 
 ### Configurar Qgis para acceder con SSH Tunnel
 
